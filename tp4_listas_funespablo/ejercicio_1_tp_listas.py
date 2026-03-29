@@ -1,3 +1,4 @@
+
 # Ejercicio 1 Nota de alumnos
 lista_notas = [10,6,4,9,8,3,10,8,7,9]
 num_alumno = 1
