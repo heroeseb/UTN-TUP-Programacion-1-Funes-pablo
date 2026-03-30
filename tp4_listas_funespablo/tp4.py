@@ -1,56 +1,21 @@
 
-# Ejercicio 3 Lista pares e impares
-lista = []
-pares = []
-impares = []
-import random
-for i in range(15):
-    numero = random.randint(1,100)
-    lista.append(numero)
-    if numero%2 == 0:
-        pares.append(numero)
-    else:
-        impares.append(numero)
-print(f"Los números de la lista ({len(lista)} números) son: ")
-for num in lista:
-    print(num,end=" ")
-print(f"\nLos números pares son {len(pares)}: ")
-for num in pares:
-    print(num,end=" ")
-print(f"\nLos números impares son {len(impares)}: ")
-for num in impares:
-    print(num,end=" ")
-# Ejercicio 4 Valores repetidos
-datos = [1,3,5,3,7,1,9,5,3]
-print("La lista completa es: ")
-for dato in datos:
-    print(dato,end=" ")
-lista_nueva = []
-for dat in datos:
-    if dat in lista_nueva:
-        continue
-    else:
-        lista_nueva.append(dat)
-print(f"\nLa lista sin repetir números es: ")
-for numero_nuevo in lista_nueva:
-    print(numero_nuevo,end=" ")
 # Ejercicio 5 Agregar o quitar en una lista
 alumnos = ["Laura","Diego","Lucas","Paula","Bruno","Sofia","Carla","Tomas"]
 print("Los alumnos presentes son: ")
 for alumno in alumnos:
     print(alumno,end=" ")
 while True:
-    opcion = input("Dime si quieres agregar un nuevo estudiante (1) o eliminar uno ya existente en la lista (2) o si quieres salir del menú (0): ")
+    opcion = input("Dime si quieres agregar un nuevo estudiante (1) o eliminar uno ya existente en la lista (2) o si quieres salir del menú (0): ").strip()
     if opcion == "0":
         break
     elif opcion == "1":
-        agregar = input("Dime el nombre del alumno que quieres agregar: ")
-        alumnos.append(agregar)
+        agregar = input("Dime el nombre del alumno que quieres agregar: ").strip()
+        alumnos.append(agregar.title())
     elif opcion == "2":
         while True:
-            quitar = input("Dime el nombre del alumno que quieres quitar: ")
+            quitar = input("Dime el nombre del alumno que quieres quitar: ").strip()
             if quitar in alumnos:
-                alumnos.remove(quitar)
+                alumnos.remove(quitar.title())
                 break
             else:
                 print("Dime un nombre de alumno correcto...")
