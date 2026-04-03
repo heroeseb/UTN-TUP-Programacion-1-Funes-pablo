@@ -10,7 +10,7 @@ for alumno in lista:
     print(alumno,end=" ")
 while True:
     nombre = input("\nIngrese un nombre a buscar: ").strip()
-    if nombre.isalpha():
+    if nombre.replace(" ","").isalpha():
         nombre_title = nombre.title()
         if nombre_title in lista:
             print(f"El nombre {nombre_title} se encuentra en la lista")
@@ -20,4 +20,4 @@ while True:
         else:
             print("No se encuentra en la lista")
     else:
-        print("Ingrese un nombre valido")
+        print("Ingrese un nombre válido")
