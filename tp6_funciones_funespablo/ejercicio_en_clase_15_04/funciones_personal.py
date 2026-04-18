@@ -4,23 +4,33 @@ def es_entero_o_flotante(dato):
     else:
         return False
 
-def input_lista_intfloat (mensaje,cantidad,condicion_opcional=None):
+def input_lista_intfloat(mensaje, cantidad, condicion_opcional=None,condicion_opcional2=None):
     lista = []
+    
     for _ in range(cantidad):
         while True:
             numero = input(mensaje).strip()
-            if condicion_opcional:
-                if es_entero_o_flotante(numero) and numero >= condicion_opcional:
-                    lista.append(numero)
-                    break
+            
+            if es_entero_o_flotante(numero):
+                
+                # Convertimos correctamente
+                if "." in numero:
+                    valor = float(numero)
                 else:
-                    print("Ingrese un numero correcto")
+                    valor = int(numero)
+                
+                # Validación opcional
+                if condicion_opcional is not None:
+                    if valor <= condicion_opcional:
+                        lista.append(valor)
+                        break
+                    else:
+                        print("El numero no cumple la condicion")
+                else:
+                    lista.append(valor)
+                    break
             else:
-                if es_entero_o_flotante(numero):
-                    lista.append(numero)
-                    break
-                else:
-                    print("Ingrese un numero correcto")
+                print("Ingrese un numero correcto")
     return lista
 
 
@@ -40,7 +50,7 @@ def print_lista(lista):
 def filtrar_aprobados(notas,umbral):
     aprobado = []
     for nota in notas:
-        if  es_entero_o_flotante(nota) and nota >= umbral:
+        if  nota >= umbral:
             aprobado.append(nota)
     return aprobado
 
