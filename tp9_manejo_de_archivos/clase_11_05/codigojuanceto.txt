@@ -1,0 +1,6 @@
+def limpiar_consola(tiempo_espera = None):
+    if tiempo_espera is not None:
+        time.sleep(tiempo_espera)
+        os.system('cls' if os.name == 'nt' else 'clear')
+    else:
+        os.system('cls' if os.name == 'nt' else 'clear')

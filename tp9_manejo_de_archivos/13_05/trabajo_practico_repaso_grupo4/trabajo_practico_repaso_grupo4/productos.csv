@@ -1,0 +1,6 @@
+id,nombre,categoria,precio,stock
+0,Mouse,Periferico,15000.0,10
+1,Teclado,Periferico,25000.0,5
+2,Monitor,Periferico,50000.0,3
+3,Procesador,Componente,200000.0,2
+4,Placa de video,Componente,300000.0,1
