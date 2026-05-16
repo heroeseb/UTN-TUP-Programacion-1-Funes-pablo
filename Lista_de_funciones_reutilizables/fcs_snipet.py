@@ -130,3 +130,104 @@ def buscar_producto(lista):
         case _:
             print('Ingrese una opcion correcta (1 o 2)!')
 ##########################################################################################################
+####################   MODIFICAR PRODUCTO ################################################################
+def modificacion(diccionario):
+    diccionario_copia = diccionario.copy()
+    nombre = input_str('Ingrese el nombre del producto(si no deseas modificarlo ingresa no): ','Ingrese un nombre valido')
+    if nombre != 'No':
+        diccionario_copia['nombre'] = nombre
+    categoria = input_str('Ingrese la categoria del producto(si no deseas modificarlo ingresa no): ','Ingrese una categoria valida')
+    if categoria != 'No':
+        diccionario_copia['categoria'] = categoria
+    precio = input_int_or_float('float','Ingrese el precio del producto(si no desea modificar ingrese 0): ')
+    while not precio >= 0:
+        print('El un numero mayor o igual a cero!')
+        precio = input_int_or_float('float','Ingrese el precio del producto(si no desea modificar ingrese 0): ')
+    if precio != 0:
+        diccionario_copia['precio'] = precio
+    stock = input_int_or_float('int','Ingrese el Stock(si no desea modificar ingrese -1): ')
+    while not stock >= -1:
+        print('Ingrese un numero mayor o igual a -1!')
+        stock = input_int_or_float('int','Ingrese el Stock(si no desea modificar ingrese -1): ')
+    if stock != -1:
+        diccionario_copia['stock'] = stock
+    return diccionario_copia
+
+def modificar_producto(lista):
+    copia_lista = lista.copy()
+    print('Ingrese si desea buscar el producto a modificar por:')
+    print('1. ID')
+    print('2. Nombre')
+    opcion = input_int_or_float('int','Ingrese una opción: ','Solo se pueden ingresar numeros!')
+    match opcion:
+        case 1:
+            id_buscado = input_int_or_float('int','Ingrese el ID a buscar: ','Solo se permiten numeros')
+            encontrado = False
+            for i in range(len(copia_lista)):
+                if copia_lista[i]['id'] == id_buscado:
+                    print('-'*50)
+                    print('El producto sin modificar: ')
+                    mostrar_producto_individual(copia_lista[i])
+                    encontrado = True
+                    copia_lista[i] = modificacion(copia_lista[i])
+                    print('Producto modificado con exito!')
+                    return copia_lista
+            if not encontrado:
+                print('No se encontro el producto con ese ID!')
+            return copia_lista
+        case 2:
+            nombre_buscado = input_str('Ingrese el nombre del articulo a buscar: ','Solo se permiten letras')
+            encontrado = False
+            for i in range(len(copia_lista)):
+                if copia_lista[i]['nombre'].capitalize() == nombre_buscado:
+                    print('-'*50)
+                    print('El producto sin modificar: ')
+                    mostrar_producto_individual(copia_lista[i])
+                    encontrado = True
+                    copia_lista[i] = modificacion(copia_lista[i])
+                    print('Producto modificado con exito!')
+                    return copia_lista
+            if not encontrado:
+                print('No se encontro el producto con ese nombre!')
+            return copia_lista
+        case _:
+            print('Ingrese una opcion correcta (1 o 2)!')
+################################################################################################################
+######################### ELIMINAR PRODUCTO #################################################################
+def eliminar_producto(lista):
+    copia_lista = lista.copy()
+    id_buscado = input_int_or_float('int','Ingrese el ID a buscar: ','Solo se permiten numeros')
+    encontrado = False
+    for i in range(len(copia_lista)):
+        if copia_lista[i]['id'] == id_buscado:
+            print('-'*50)
+            print('El producto es: ')
+            mostrar_producto_individual(copia_lista[i])
+            encontrado = True
+            decision = input_str('Confirma la eliminación del producto?(si o no): ')
+            if not decision == 'Si':
+                print('Cancelaste la eliminación!')
+            else:
+                copia_lista.pop(i)
+                print('Producto eliminado con exito!')
+            return copia_lista
+    if not encontrado:
+        print('No se encontro el producto con ese ID!')
+    return copia_lista
+#################################################################################################
+#######################     MOSTRAR ESTADISTICAS    ###############################################
+def mostrar_estadisticas(lista):
+    total_productos = 0
+    producto_mas_caro = 0
+    stock_total = 0
+    lista_precios_todos = sum([e['precio'] for e in lista])
+    for elemento in lista:
+        total_productos += 1
+        if elemento['precio'] > producto_mas_caro:
+            producto_mas_caro = elemento['precio']
+        stock_total += elemento['stock']
+    print(f'La cantidad total de productos es: {total_productos}')
+    print(f'El producto más caro es: {producto_mas_caro}')
+    print(f'El promedio de precios es: {lista_precios_todos/len(lista):.2f}')
+    print(f'El stock total es: {stock_total}')
+#####################################################################################################

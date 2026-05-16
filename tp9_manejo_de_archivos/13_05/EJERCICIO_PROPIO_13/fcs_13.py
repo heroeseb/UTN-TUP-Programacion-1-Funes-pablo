@@ -1,43 +1,6 @@
-# Parte 3 — Ejercicio Integrador Completo
-# Sistema de Gestión de Productos
 
-# Objetivo
-# Desarrollar un sistema ABM completo usando:
-# • funciones 
-# • listas de diccionarios 
-# • manejo de archivos CSV
-# • csv.DictReader 
-# • csv.DictWriter 
-# • validaciones 
-# • búsqueda 
-# • persistencia automática 
-# Requisitos del sistema
-# Cada producto tendrá:
-# • ID 
-# • nombre 
-# • categoría 
-# • precio 
-# • stock 
-# Ejemplo:
-# {
-#  "id": "1",
-#  "nombre": "Mouse",
-#  "categoria": "Periférico",
-#  "precio": 15000,
-#  "stock": 10
-# }
-
-# Funcionalidades obligatorias
-
-# 1. Cargar datos automáticamente desde CSV
-# Al iniciar el programa:
-# • leer el archivo productos.csv 
-# • cargar los datos en una lista de diccionarios 
-# Si el archivo no existe:
-# • comenzar con lista vacía 
 import csv
 csv_productos = 'productos.csv'
-productos = []
 Fieldnames = ['id','nombre','categoria','precio','stock']
 def cargar_datos(product):
     productos = []
@@ -57,16 +20,16 @@ def cargar_datos(product):
     except PermissionError:
         print("Error... No tenes permiso de lectura en este archivo.")
     return productos
-productos = cargar_datos(csv_productos)
-# 2. Alta de productos
-# Permitir:
-# • ingresar datos 
-# • validar: 
-# o precio > 0 
-# o stock >= 0 
-# o ID único
-# Al agregar:
-# • guardar automáticamente en CSV 
+
+def menu():
+    print('''Menú
+1. Agregar producto
+2. Mostrar productos
+3. Buscar producto
+4. Modificar producto
+5. Eliminar producto
+6. Estadísticas
+7. Salir''')
 
 def input_str(mensaje,mensaje_2=None):
     while True:
@@ -127,29 +90,21 @@ def guardar_datos(lista):
         writer.writerows(lista)
         print('Se guardaron correctamente los datos')
 
-'''producto = agregar_producto(productos)
-productos.append(producto)
-guardar_datos(productos)
-print(productos)
-'''
-# 3. Mostrar productos
-# Mostrar todos los productos de forma prolija.
+
+
 def mostrar_productos(lista):
     for producto in lista:
         print('-'*50)
         for k,v in producto.items():
             print(f'{k.capitalize()} : {v}')
-mostrar_productos(productos)
+
 
 def mostrar_producto_individual(diccionario):
     print('-'*50)
     for k,v in diccionario.items():
         print(f'{k.capitalize()} : {v}')
     print('-'*50)
-# 4. Buscar producto
-# Buscar por:
-# • ID 
-# • nombre 
+
 def buscar_producto(lista):
     print('Ingrese si desea buscar por:')
     print('1. ID')
@@ -176,65 +131,111 @@ def buscar_producto(lista):
                 print('No se encontro el producto con ese nombre!')
         case _:
             print('Ingrese una opcion correcta (1 o 2)!')
-buscar_producto(productos)
-#
-# 5. Modificar producto
-# Permitir modificar:
-# • nombre 
-# • categoría 
-# • precio 
-# • stock 
-# Luego:
-# • guardar automáticamente 
-# 6. Eliminar producto
-# Eliminar por ID.
-# Confirmar antes de borrar.
-# Luego:
-# • guardar automáticamente 
-# 7. Estadísticas
-# Mostrar:
-# • cantidad total de productos 
-# • producto más caro 
-# • promedio de precios 
-# • stock total 
-# Restricciones importantes
-# NO debe existir:
-# • opción “Guardar” 
-# • opción “Cargar”
-# El guardado debe ser AUTOMÁTICO:
-# • después de alta 
-# • después de modificación 
-# • después de eliminación 
-# Menú esperado
-# 1. Agregar producto
-# 2. Mostrar productos
-# 3. Buscar producto
-# 4. Modificar producto
-# 5. Eliminar producto
-# 6. Estadísticas
-# 7. Salir
-# Recomendaciones técnicas
-# Archivo CSV
-# Nombre sugerido:
-# productos.csv
-# Estructura recomendada
-# Funciones sugeridas:
-# cargar_datos()
-# guardar_datos()
-# agregar_producto()
-# mostrar_productos()
-# buscar_producto()
-# modificar_producto()
-# eliminar_producto()
-# mostrar_estadisticas()
-# menu()
+#filenotfound #valueerror #
+def modificacion(diccionario):
+    diccionario_copia = diccionario.copy()
+    nombre = input_str('Ingrese el nombre del producto(si no deseas modificarlo ingresa no): ','Ingrese un nombre valido')
+    if nombre != 'No':
+        diccionario_copia['nombre'] = nombre
+    categoria = input_str('Ingrese la categoria del producto(si no deseas modificarlo ingresa no): ','Ingrese una categoria valida')
+    if categoria != 'No':
+        diccionario_copia['categoria'] = categoria
+    precio = input_int_or_float('float','Ingrese el precio del producto(si no desea modificar ingrese 0): ')
+    while not precio >= 0:
+        print('El un numero mayor o igual a cero!')
+        precio = input_int_or_float('float','Ingrese el precio del producto(si no desea modificar ingrese 0): ')
+    if precio != 0:
+        diccionario_copia['precio'] = precio
+    stock = input_int_or_float('int','Ingrese el Stock(si no desea modificar ingrese -1): ')
+    while not stock >= -1:
+        print('Ingrese un numero mayor o igual a -1!')
+        stock = input_int_or_float('int','Ingrese el Stock(si no desea modificar ingrese -1): ')
+    if stock != -1:
+        diccionario_copia['stock'] = stock
+    return diccionario_copia
 
-# # EXTRA
-# # Agregar:
-# # • ordenar productos por precio 
-# # • filtrar por categoría 
-# # • evitar IDs duplicados 
-# # • validar errores con try/except 
-# # • fecha de creación 
-# # • búsqueda parcial 
-# # • exportar productos sin stock
+def modificar_producto(lista):
+    copia_lista = lista.copy()
+    print('Ingrese si desea buscar el producto a modificar por:')
+    print('1. ID')
+    print('2. Nombre')
+    opcion = input_int_or_float('int','Ingrese una opción: ','Solo se pueden ingresar numeros!')
+    match opcion:
+        case 1:
+            id_buscado = input_int_or_float('int','Ingrese el ID a buscar: ','Solo se permiten numeros')
+            encontrado = False
+            for i in range(len(copia_lista)):
+                if copia_lista[i]['id'] == id_buscado:
+                    print('-'*50)
+                    print('El producto sin modificar: ')
+                    mostrar_producto_individual(copia_lista[i])
+                    encontrado = True
+                    copia_lista[i] = modificacion(copia_lista[i])
+                    print('Producto modificado con exito!')
+                    return copia_lista
+            if not encontrado:
+                print('No se encontro el producto con ese ID!')
+            return copia_lista
+        case 2:
+            nombre_buscado = input_str('Ingrese el nombre del articulo a buscar: ','Solo se permiten letras')
+            encontrado = False
+            for i in range(len(copia_lista)):
+                if copia_lista[i]['nombre'].capitalize() == nombre_buscado:
+                    print('-'*50)
+                    print('El producto sin modificar: ')
+                    mostrar_producto_individual(copia_lista[i])
+                    encontrado = True
+                    copia_lista[i] = modificacion(copia_lista[i])
+                    print('Producto modificado con exito!')
+                    return copia_lista
+            if not encontrado:
+                print('No se encontro el producto con ese nombre!')
+            return copia_lista
+        case _:
+            print('Ingrese una opcion correcta (1 o 2)!')
+
+def eliminar_producto(lista):
+    copia_lista = lista.copy()
+    id_buscado = input_int_or_float('int','Ingrese el ID a buscar: ','Solo se permiten numeros')
+    encontrado = False
+    for i in range(len(copia_lista)):
+        if copia_lista[i]['id'] == id_buscado:
+            print('-'*50)
+            print('El producto es: ')
+            mostrar_producto_individual(copia_lista[i])
+            encontrado = True
+            decision = input_str('Confirma la eliminación del producto?(si o no): ')
+            if not decision == 'Si':
+                print('Cancelaste la eliminación!')
+            else:
+                copia_lista.pop(i)
+                print('Producto eliminado con exito!')
+            return copia_lista
+    if not encontrado:
+        print('No se encontro el producto con ese ID!')
+    return copia_lista
+
+
+def mostrar_estadisticas(lista):
+    total_productos = 0
+    producto_mas_caro = 0
+    stock_total = 0
+    lista_precios_todos = sum([e['precio'] for e in lista])
+    for elemento in lista:
+        total_productos += 1
+        if elemento['precio'] > producto_mas_caro:
+            producto_mas_caro = elemento['precio']
+        stock_total += elemento['stock']
+    print(f'La cantidad total de productos es: {total_productos}')
+    print(f'El producto más caro es: {producto_mas_caro}')
+    print(f'El promedio de precios es: {lista_precios_todos/len(lista):.2f}')
+    print(f'El stock total es: {stock_total}')
+
+
+if __name__ == '__main__':
+    productos = cargar_datos(csv_productos)
+    mostrar_productos(productos)
+    productos = eliminar_producto(productos)
+    mostrar_productos(productos)
+    mostrar_estadisticas(productos)
+
