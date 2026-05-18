@@ -1,4 +1,4 @@
-Lapicera,120.5,40
+Lapicera,120.5,30
 Cuaderno,450.0,15
 Goma,80.25,50
-lapiz,300.0,2
+Lapiz,fads,fasd

@@ -27,6 +27,9 @@ def leer_mostrar_productos():
             for linea in archivo:
                 try:
                     datos = linea.strip().split(',')
+                    if len(datos) != 3:
+                        print(f'Línea omitida por formato incorrecto (deben ser 3 columnas): {linea.strip()}')
+                        continue
                     nombre = datos[0]
                     precio = float(datos[1])
                     cantidad = int(datos[2])
@@ -42,19 +45,47 @@ def leer_mostrar_productos():
 # =====================================================================
 # 3. Agregar productos desde teclado
 # =====================================================================
+def input_str(mensaje,mensaje_2=None):
+    while True:
+        try:
+            input_salid = input(mensaje).strip()
+            if not input_salid.replace(' ','').isalnum():
+                raise TypeError
+            return input_salid
+        except TypeError:
+            print(mensaje_2 if mensaje_2 else 'Error de tipo')
+
+def input_int_or_float(tipo,mensaje,mensaje_2=None):
+    while True:
+        try:
+            match tipo:
+                case 'int':
+                    input_salid = input(mensaje).strip()
+                    if not (input_salid.isdigit() and int(input_salid) >= 0):
+                        raise ValueError
+                    return input_salid
+                case 'float':
+                    input_salid = input(mensaje).strip()
+                    if not (input_salid.replace('.','',1).isdigit() and float(input_salid) > 0):
+                        raise ValueError
+                    return input_salid
+        except ValueError:
+            print(mensaje_2 if mensaje_2 else 'Error de valor')
+
 def crear_linea():
-    producto_nombre = input('Ingrese el nombre del nuevo producto: ')
-    producto_precio = input('Ingrese el precio del nuevo producto: ')
-    producto_cantidad = input('Ingrese la cantidad del nuevo producto: ')
-    
-    lista_producto = [producto_nombre, producto_precio, producto_cantidad]
-    # Agregamos el salto de línea al final para mantener el archivo ordenado
+    producto_nombre = input_str('Ingrese el nombre del nuevo producto: ','Ingrese un nombre correcto!')
+    producto_precio = input_int_or_float('float','Ingrese el precio del nuevo producto: ','Ingrese un precio correcto')
+    producto_cantidad = input_int_or_float('int','Ingrese la cantidad del nuevo producto: ','Ingrese una cantidad correcta')
+    lista_producto = [producto_nombre.capitalize(), producto_precio, producto_cantidad]
     linea = ','.join(lista_producto) + '\n'
     return linea
 
 def agregar_linea(linea_string):
-    with open('productos.txt', 'a', encoding='utf-8') as archivo:
-        archivo.write(linea_string)
+    try:
+        with open('productos.txt', 'a', encoding='utf-8') as archivo:
+            archivo.write(linea_string)
+    except PermissionError:
+        print('No se tiene permisos para acceder al archivo!')
 
 
 # =====================================================================
@@ -69,8 +100,10 @@ def cargar_productos_lista_dicc():
                     continue
                 try:
                     datos = linea.strip().split(',')
+                    if len(datos) != 3:
+                        print(f'Línea omitida por formato incorrecto (deben ser 3 columnas): {linea.strip()}')
+                        continue
                     nombre = datos[0]
-                    # Convertimos a float e int para que la lista tenga los tipos correctos
                     precio = float(datos[1])
                     cantidad = int(datos[2])
                     
@@ -91,16 +124,16 @@ def cargar_productos_lista_dicc():
 # 5. Buscar producto por nombre
 # =====================================================================
 def buscar_producto(lista):
-    busqueda = input('Ingrese el nombre del producto que desea buscar: ')
+    if not lista:
+        print("La lista de productos está vacía. No hay nada que buscar.")
+        return
+    busqueda = input('Ingrese el nombre del producto que desea buscar: ').strip()
     encontrado = False
-    
-    # Una forma más directa en Python de recorrer la lista sin usar range(len())
     for producto in lista:
-        if producto['nombre'].lower() == busqueda.lower(): # .lower() evita problemas con mayúsculas
+        if producto['nombre'].capitalize() == busqueda.capitalize(): 
             encontrado = True
             print(f"Producto: {producto['nombre']} | Precio: ${producto['precio']} | Cantidad: {producto['cantidad']}")
-            break # Si lo encuentra, detenemos el ciclo
-            
+            break 
     if not encontrado:
         print('No se encontró el producto')
 
@@ -108,14 +141,16 @@ def buscar_producto(lista):
 # =====================================================================
 # 6. Guardar los productos actualizados
 # =====================================================================
+
 def guardar_cambios(lista):
-    with open('productos.txt', 'w', newline='', encoding='utf-8') as archivo:
-        for dic in lista:
-            lista_linea = []
-            for v in dic.values():
-                lista_linea.append(str(v))
-            str_linea = ','.join(lista_linea)
-            archivo.write(str_linea + '\n')
+    try:
+        with open('productos.txt', 'w', newline='', encoding='utf-8') as archivo:
+            for dic in lista:
+                lista_linea = [str(v) for v in dic.values()]
+                str_linea = ','.join(lista_linea)
+                archivo.write(str_linea + '\n')
+    except PermissionError:
+        print('¡Error! No se pudo guardar. El archivo está abierto por otro programa o no hay permisos.')
 
 
 # =====================================================================
@@ -144,7 +179,7 @@ if __name__ == "__main__":
     print()
 
     print("--- 6. Guardando cambios/sobrescribiendo archivo desde la lista ---")
-    # Para probar la consigna 6, modificamos un dato en memoria antes de guardar
+    # Para probar modificamos un dato en memoria antes de guardar
     if productos:
         print("Modificando la cantidad del primer producto en la lista para verificar el guardado...")
         productos[0]['cantidad'] += 10 
